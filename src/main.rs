@@ -1,15 +1,21 @@
 use ferris_says::say;
-use std::io::{stdout, BufWriter};
+use std::{io::{BufWriter, stdout}};
 
 fn main() {
+    fn ferris_read_lines(lines: &[&str], delay : u64) {
+        for line in lines {
+            ferris_read_line(line, delay);
+        }
+    } 
 
-    fn set_dialog(dialogtext: &str, delay : u64) {
+    fn ferris_read_line(dialogtext: &str, delay : u64) {
         if delay > 0 {
             std::thread::sleep(std::time::Duration::from_secs(delay));
         }
 
         let stdout = stdout();
         let message = String::from(dialogtext);
+
         let width = message.chars().count();
 
         print!("\x1Bc");
@@ -17,9 +23,8 @@ fn main() {
         say(&message, width, &mut writer).unwrap();
     }
 
-    set_dialog("One", 1);
-    set_dialog("Two", 1);
-    set_dialog("Three", 1);
+    let array = &["one", "two", "three"];
+    ferris_read_lines(array, 2);
 
-    println!("END_PROGRAM");
+    println!("End of reading");
 }
