@@ -1,16 +1,17 @@
 use ferris_says::say;
 use std::{io::{BufWriter, stdout}};
+use std::fs;
 
 fn main() {
-    fn ferris_read_lines(lines: &[&str], delay : u64) {
+    fn ferris_read_lines(lines: &Vec<&str>, duration : u64) {
         for line in lines {
-            ferris_read_line(line, delay);
+            ferris_read_line(line, duration);
         }
     } 
 
-    fn ferris_read_line(dialogtext: &str, delay : u64) {
-        if delay > 0 {
-            std::thread::sleep(std::time::Duration::from_secs(delay));
+    fn ferris_read_line(dialogtext: &str, duration : u64) {
+        if duration > 0 {
+            std::thread::sleep(std::time::Duration::from_secs(duration));
         }
 
         let stdout = stdout();
@@ -23,8 +24,14 @@ fn main() {
         say(&message, width, &mut writer).unwrap();
     }
 
-    let array = &["one", "two", "three"];
-    ferris_read_lines(array, 2);
+    fn parse_file(file_path: &str) -> String {
+        let contents = fs::read_to_string(file_path)
+            .expect("Should have been able to read the file");  
+        return contents;
+    }
 
-    println!("End of reading");
+    let contents = parse_file("rhyme.txt");
+
+    let lines = contents.lines().collect::<Vec<&str>>();
+    ferris_read_lines(&lines, 2);
 }
